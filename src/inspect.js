@@ -6,7 +6,7 @@ import {
 	parseChallenge,
 	selectRequirement,
 	amountToUsd,
-} from '../../x402-fetch/src/index.js';
+} from '../../x402-fetch/src/parse-challenge.js';
 
 /**
  * @returns {Promise<{ status:number, paid:boolean, accepts:any[], chosen:any|null, resource:any, raw:any }>}
