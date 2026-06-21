@@ -1,0 +1,169 @@
+{
+	"name": "@three-ws/vscode-x402",
+	"displayName": "three.ws — x402",
+	"description": "Browse the x402 bazaar, decode 402 payment challenges, and pay-per-call paid APIs with USDC — without leaving VS Code. Powered by three.ws.",
+	"version": "0.1.0",
+	"publisher": "three-ws",
+	"license": "Apache-2.0",
+	"homepage": "https://three.ws",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nirholas/three.ws.git",
+		"directory": "packages/vscode-x402"
+	},
+	"bugs": {
+		"url": "https://github.com/nirholas/three.ws/issues"
+	},
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"x402",
+		"payments",
+		"usdc",
+		"micropayments",
+		"agent",
+		"bazaar",
+		"web3"
+	],
+	"main": "./dist/extension.js",
+	"icon": "media/icon.png",
+	"activationEvents": [],
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "threewsX402",
+					"title": "x402 Bazaar",
+					"icon": "media/x402.svg"
+				}
+			]
+		},
+		"views": {
+			"threewsX402": [
+				{
+					"id": "threewsX402.bazaar",
+					"name": "Services",
+					"icon": "media/x402.svg"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "threewsX402.bazaar",
+				"contents": "Browse paid x402 APIs and MCP tools from across the bazaar.\n[Refresh services](command:threewsX402.refresh)\n[Set filters](command:threewsX402.setFilters)\n\nTo pay for a service you'll need an EVM wallet key.\n[Set wallet key](command:threewsX402.setWalletKey)"
+			}
+		],
+		"commands": [
+			{
+				"command": "threewsX402.refresh",
+				"title": "x402: Refresh Bazaar",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "threewsX402.search",
+				"title": "x402: Search Bazaar",
+				"icon": "$(search)"
+			},
+			{
+				"command": "threewsX402.setFilters",
+				"title": "x402: Set Bazaar Filters",
+				"icon": "$(filter)"
+			},
+			{
+				"command": "threewsX402.inspect",
+				"title": "x402: Inspect Endpoint (decode 402 challenge)"
+			},
+			{
+				"command": "threewsX402.openService",
+				"title": "x402: Open Service Details"
+			},
+			{
+				"command": "threewsX402.pay",
+				"title": "x402: Pay & Call Endpoint"
+			},
+			{
+				"command": "threewsX402.setWalletKey",
+				"title": "x402: Set Wallet Key"
+			},
+			{
+				"command": "threewsX402.clearWalletKey",
+				"title": "x402: Clear Wallet Key"
+			},
+			{
+				"command": "threewsX402.scaffoldEndpoint",
+				"title": "x402: Scaffold a Paid Endpoint"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "threewsX402.search",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@1"
+				},
+				{
+					"command": "threewsX402.setFilters",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@2"
+				},
+				{
+					"command": "threewsX402.refresh",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@3"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "threewsX402.pay",
+					"when": "view == threewsX402.bazaar && viewItem == x402service",
+					"group": "inline"
+				}
+			]
+		},
+		"configuration": {
+			"title": "three.ws x402",
+			"properties": {
+				"threewsX402.origin": {
+					"type": "string",
+					"default": "https://three.ws",
+					"description": "Origin that hosts the bazaar discovery API (/api/bazaar/list, /api/bazaar/search)."
+				},
+				"threewsX402.maxPaymentUsd": {
+					"type": "number",
+					"default": 0.1,
+					"description": "Spending cap per request, in USD. Any auto-payment above this is refused before signing."
+				},
+				"threewsX402.confirmEachPayment": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show a confirmation dialog with the exact USD amount before signing each payment."
+				},
+				"threewsX402.network": {
+					"type": "string",
+					"default": "eip155:8453",
+					"description": "Preferred CAIP-2 network for payment when an endpoint accepts several (default: Base mainnet)."
+				},
+				"threewsX402.filters": {
+					"type": "object",
+					"default": {
+						"type": "http"
+					},
+					"description": "Default bazaar filters (type, network, maxPrice, tag, sort)."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "node build.mjs",
+		"watch": "node build.mjs --watch",
+		"vscode:prepublish": "node build.mjs --production"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.85.0",
+		"esbuild": "^0.21.0"
+	}
+}
