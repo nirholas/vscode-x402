@@ -247,7 +247,7 @@ to package a `.vsix`.
 
 ## Related packages
 
-- [`@nirholas/x402-fetch`](https://www.npmjs.com/package/@nirholas/x402-fetch) —
+- [`@three-ws/x402-fetch`](https://www.npmjs.com/package/@three-ws/x402-fetch) —
   the standalone, zero-dependency `fetch` wrapper this extension vendors.
 - [x402 protocol](https://github.com/coinbase/x402) — the open spec for
   HTTP `402`-based pay-per-call.
