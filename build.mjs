@@ -1,6 +1,6 @@
-// Bundle the extension (and the bundled @three-ws/x402-fetch source) into a
-// single CJS file VS Code can require. `vscode` is provided by the host and must
-// stay external.
+// Bundle the extension (and the vendored, zero-dep x402-fetch primitives in
+// src/vendor) into a single CJS file VS Code can require. `vscode` is provided
+// by the host and must stay external.
 import esbuild from 'esbuild';
 
 const production = process.argv.includes('--production');

@@ -4,8 +4,14 @@
 
 import * as vscode from 'vscode';
 import * as bazaar from './bazaar.js';
+import { BazaarNotConfiguredError } from './bazaar.js';
 
-const STATE = { loading: 'loading', error: 'error', ready: 'ready' };
+const STATE = {
+	loading: 'loading',
+	error: 'error',
+	notConfigured: 'notConfigured',
+	ready: 'ready',
+};
 
 export class BazaarProvider {
 	constructor() {
@@ -18,7 +24,7 @@ export class BazaarProvider {
 	}
 
 	filters() {
-		return vscode.workspace.getConfiguration('threewsX402').get('filters', { type: 'http' });
+		return vscode.workspace.getConfiguration('x402').get('filters', { type: 'http' });
 	}
 
 	setQuery(query) {
@@ -37,7 +43,7 @@ export class BazaarProvider {
 			this._errors = Array.isArray(res.errors) ? res.errors : [];
 			this._state = STATE.ready;
 		} catch (e) {
-			this._state = STATE.error;
+			this._state = e instanceof BazaarNotConfiguredError ? STATE.notConfigured : STATE.error;
 			this._message = e?.message || String(e);
 			this._items = [];
 		}
@@ -51,6 +57,18 @@ export class BazaarProvider {
 	getChildren(node) {
 		if (this._state === STATE.loading) {
 			return [infoNode('Loading services…', new vscode.ThemeIcon('loading~spin'))];
+		}
+		if (this._state === STATE.notConfigured) {
+			const node = infoNode(
+				'Set a bazaar host to browse services',
+				new vscode.ThemeIcon('gear'),
+			);
+			node.command = {
+				command: 'x402.setBazaarUrl',
+				title: 'Set Bazaar URL',
+			};
+			node.tooltip = this._message;
+			return [node];
 		}
 		if (this._state === STATE.error) {
 			return [infoNode(`Error: ${this._message}`, new vscode.ThemeIcon('error'))];
@@ -99,7 +117,7 @@ function serviceNode(item) {
 	node.iconPath = new vscode.ThemeIcon(item.type === 'mcp' ? 'plug' : 'globe');
 	node.contextValue = 'x402service';
 	node.command = {
-		command: 'threewsX402.openService',
+		command: 'x402.openService',
 		title: 'Open Service Details',
 		arguments: [item],
 	};

@@ -1,16 +1,24 @@
-// Buyer-side discovery client. Talks to the three.ws bazaar proxy
-// (/api/bazaar/list, /api/bazaar/search), which merges + normalises results
-// across every configured x402 facilitator. Mirrors public/x402-discover.js but
-// runs in the extension host (Node global fetch).
+// Buyer-side discovery client. Talks to a bazaar discovery API
+// (/api/bazaar/list, /api/bazaar/search) that merges + normalises x402 services
+// across facilitators. The origin is configured by the user via the
+// `x402.bazaarUrl` setting — there is no built-in default, so discovery is
+// opt-in. Inspecting or paying an arbitrary URL needs no discovery host at all.
 
 import * as vscode from 'vscode';
 
+class BazaarNotConfiguredError extends Error {}
+
 function origin() {
-	return vscode.workspace
-		.getConfiguration('threewsX402')
-		.get('origin', 'https://three.ws')
-		.replace(/\/+$/, '');
+	const url = (vscode.workspace.getConfiguration('x402').get('bazaarUrl', '') || '').trim();
+	if (!url) {
+		throw new BazaarNotConfiguredError(
+			'No bazaar discovery host is set. Configure "x402.bazaarUrl" in Settings to browse and search services. Inspecting or paying a specific endpoint URL needs no bazaar host.',
+		);
+	}
+	return url.replace(/\/+$/, '');
 }
+
+export { BazaarNotConfiguredError };
 
 function applyFilters(url, filters = {}) {
 	const set = (k, v) => v != null && v !== '' && url.searchParams.set(k, String(v));

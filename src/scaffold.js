@@ -1,56 +1,120 @@
-// Scaffold a new paid x402 endpoint that follows the repo's canonical
-// paidEndpoint() pattern (api/_lib/x402-paid-endpoint.js). Generates a working
-// handler file in the open workspace and opens it.
+// Scaffold a new paid x402 endpoint. Generates a self-contained, framework-
+// agnostic Node handler in the open workspace and opens it. The handler answers
+// an unpaid request with a `402 Payment Required` challenge and runs the real
+// work only after the buyer presents a valid X-PAYMENT header. No framework or
+// monorepo dependency — it ships with a verifyPayment() stub you wire to your
+// facilitator of choice.
 
 import * as vscode from 'vscode';
 
-function template({ slug, fnName, priceUsd, description }) {
+function template({ slug, priceUsd, description }) {
 	const priceAtomics = Math.round(Number(priceUsd) * 1e6);
-	return `// ${slug} — paid x402 endpoint. Buyers pay USDC; the call runs only after
-// settlement. Wired to the shared paidEndpoint() x402 dance.
+	return `// ${slug} — paid x402 endpoint.
 //
-//   GET|POST /api/x402/${slug}
+// Buyers first call this without payment and receive a 402 challenge describing
+// the price and where to pay. They sign a USDC-on-Base EIP-3009 authorization,
+// retry with an \`X-PAYMENT\` header, and the work below runs once payment
+// verifies. Standalone Node handler — wire it into your server of choice
+// (Express, Vercel, Cloudflare, etc.). Set RESOURCE_URL to the public URL this
+// endpoint is reachable at.
 
-import { paidEndpoint } from '../_lib/x402-paid-endpoint.js';
-import { buildBazaarSchema } from '../_lib/x402-spec.js';
-import { withService } from '../_lib/x402/bazaar-helpers.js';
+// Public URL this endpoint is served from — buyers see it in the challenge.
+const RESOURCE_URL = process.env.X402_RESOURCE_URL || 'https://your-api.example.com/x402/${slug}';
 
-const RESOURCE_URL = 'https://three.ws/api/x402/${slug}';
+// USDC on Base mainnet (6 decimals). $${Number(priceUsd).toFixed(6)} per call.
+const PRICE_ATOMICS = '${priceAtomics}';
+const NETWORK = 'eip155:8453';
+const USDC_BASE = '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913';
+const PAY_TO = process.env.X402_PAY_TO || '0xYourReceivingWalletAddressHere';
 
-const paid = paidEndpoint({
-	route: '/api/x402/${slug}',
-	method: 'POST',
-	// $${Number(priceUsd).toFixed(6)} in USDC atomics (6 decimals).
-	priceAtomics: ${priceAtomics},
-	networks: ['base'],
-	description: ${JSON.stringify(description)},
-	service: withService({
-		serviceName: ${JSON.stringify(slug)},
-		tags: ['x402', 'paid'],
-	}),
-	bazaar: {
-		description: ${JSON.stringify(description)},
-		useCases: ['x402 paid api'],
-		input: { type: 'json', example: {}, schema: { type: 'object', additionalProperties: true } },
-		output: { type: 'json', example: {} },
-		schema: buildBazaarSchema({ method: 'POST', bodySchema: { type: 'object', additionalProperties: true } }),
-		resource: RESOURCE_URL,
-	},
-	resourceUrlBuilder: () => RESOURCE_URL,
+// The 402 challenge envelope a compliant x402 client parses.
+function paymentChallenge() {
+	return {
+		x402Version: 2,
+		error: 'payment required',
+		resource: { url: RESOURCE_URL, description: ${JSON.stringify(description)} },
+		accepts: [
+			{
+				scheme: 'exact',
+				network: NETWORK,
+				amount: PRICE_ATOMICS,
+				asset: USDC_BASE,
+				payTo: PAY_TO,
+				maxTimeoutSeconds: 600,
+				extra: { name: 'USD Coin', version: '2', decimals: 6 },
+			},
+		],
+	};
+}
 
-	// Runs ONLY after the buyer's USDC settles. Return JSON; throw an Error with
-	// a .status for handled failures.
-	async handler({ req }) {
-		const body = await readJson(req);
-		// Replace this echo with the real work. It returns the validated request
-		// so the endpoint is wired end-to-end from the first deploy.
-		return {
-			ok: true,
-			service: ${JSON.stringify(slug)},
-			received: body,
-		};
-	},
-});
+// Verify the buyer's X-PAYMENT proof with your facilitator before doing work.
+// Point FACILITATOR_VERIFY_URL at a facilitator's /verify endpoint (the CDP x402
+// facilitator and compatible services expose one). Returns true when settled.
+async function verifyPayment(xPaymentHeader) {
+	const facilitator = process.env.X402_FACILITATOR_VERIFY_URL;
+	if (!facilitator) {
+		throw new Error(
+			'Set X402_FACILITATOR_VERIFY_URL to a facilitator /verify endpoint to settle payments.',
+		);
+	}
+	const res = await fetch(facilitator, {
+		method: 'POST',
+		headers: { 'content-type': 'application/json' },
+		body: JSON.stringify({
+			x402Version: 2,
+			paymentHeader: xPaymentHeader,
+			paymentRequirements: paymentChallenge().accepts[0],
+		}),
+	});
+	if (!res.ok) return false;
+	const out = await res.json().catch(() => ({}));
+	return out.isValid === true || out.valid === true || out.settled === true;
+}
+
+// The real work. Runs ONLY after payment verifies. Return a JSON-serialisable
+// value — replace the echo with your service logic.
+async function run(body) {
+	return {
+		ok: true,
+		service: ${JSON.stringify(slug)},
+		received: body,
+	};
+}
+
+// Generic (req, res) handler. Adapt the request/response shims to your runtime.
+export default async function handler(req, res) {
+	const xPayment = req.headers['x-payment'] || req.headers['X-PAYMENT'];
+
+	if (!xPayment) {
+		res.statusCode = 402;
+		res.setHeader('content-type', 'application/json');
+		res.end(JSON.stringify(paymentChallenge()));
+		return;
+	}
+
+	let settled = false;
+	try {
+		settled = await verifyPayment(xPayment);
+	} catch (err) {
+		res.statusCode = 502;
+		res.setHeader('content-type', 'application/json');
+		res.end(JSON.stringify({ error: err.message }));
+		return;
+	}
+
+	if (!settled) {
+		res.statusCode = 402;
+		res.setHeader('content-type', 'application/json');
+		res.end(JSON.stringify({ ...paymentChallenge(), error: 'payment not verified' }));
+		return;
+	}
+
+	const body = await readJson(req);
+	const result = await run(body);
+	res.statusCode = 200;
+	res.setHeader('content-type', 'application/json');
+	res.end(JSON.stringify(result));
+}
 
 async function readJson(req) {
 	const chunks = [];
@@ -58,9 +122,6 @@ async function readJson(req) {
 	const raw = Buffer.concat(chunks).toString('utf8');
 	return raw ? JSON.parse(raw) : {};
 }
-
-export default paid;
-export const config = { api: { bodyParser: false } };
 `;
 }
 
@@ -88,7 +149,7 @@ export async function scaffoldEndpoint() {
 
 	const description = await vscode.window.showInputBox({
 		title: 'Description',
-		prompt: 'What does this endpoint do? (shown in the bazaar)',
+		prompt: 'What does this endpoint do? (shown in the 402 challenge)',
 		value: `${slug} service`,
 	});
 	if (description == null) return;
@@ -96,7 +157,6 @@ export async function scaffoldEndpoint() {
 	const cleanSlug = slug.trim();
 	const content = template({
 		slug: cleanSlug,
-		fnName: cleanSlug.replace(/-([a-z])/g, (_, c) => c.toUpperCase()),
 		priceUsd,
 		description,
 	});
@@ -119,6 +179,6 @@ export async function scaffoldEndpoint() {
 	const doc = await vscode.workspace.openTextDocument(target);
 	await vscode.window.showTextDocument(doc);
 	vscode.window.showInformationMessage(
-		`Scaffolded /api/x402/${cleanSlug} — it returns a wired echo response; replace the handler body with real work.`,
+		`Scaffolded api/x402/${cleanSlug}.js — set RESOURCE_URL, PAY_TO, and X402_FACILITATOR_VERIFY_URL, then replace run() with real work.`,
 	);
 }

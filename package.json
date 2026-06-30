@@ -1,11 +1,12 @@
 {
-	"name": "@three-ws/vscode-x402",
-	"displayName": "three.ws — x402",
-	"description": "Browse the x402 bazaar, decode 402 payment challenges, and pay-per-call paid APIs with USDC — without leaving VS Code. Powered by three.ws.",
+	"name": "vscode-x402",
+	"displayName": "x402 — Pay-per-call APIs",
+	"description": "Browse an x402 bazaar, decode 402 payment challenges, and pay-per-call paid APIs and MCP tools with USDC — without leaving VS Code.",
 	"version": "0.1.0",
-	"publisher": "three-ws",
+	"publisher": "nirholas",
+	"author": "nirholas",
 	"license": "Apache-2.0",
-	"homepage": "https://three.ws",
+	"homepage": "https://github.com/nirholas/vscode-x402",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/nirholas/vscode-x402.git"
@@ -35,16 +36,16 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "threewsX402",
+					"id": "x402",
 					"title": "x402 Bazaar",
 					"icon": "media/x402.svg"
 				}
 			]
 		},
 		"views": {
-			"threewsX402": [
+			"x402": [
 				{
-					"id": "threewsX402.bazaar",
+					"id": "x402.bazaar",
 					"name": "Services",
 					"icon": "media/x402.svg"
 				}
@@ -52,101 +53,105 @@
 		},
 		"viewsWelcome": [
 			{
-				"view": "threewsX402.bazaar",
-				"contents": "Browse paid x402 APIs and MCP tools from across the bazaar.\n[Refresh services](command:threewsX402.refresh)\n[Set filters](command:threewsX402.setFilters)\n\nTo pay for a service you'll need an EVM wallet key.\n[Set wallet key](command:threewsX402.setWalletKey)"
+				"view": "x402.bazaar",
+				"contents": "Browse paid x402 APIs and MCP tools from a bazaar.\nSet a discovery host to list services, or inspect/pay any endpoint URL directly — that needs no configuration.\n[Set bazaar host](command:x402.setBazaarUrl)\n[Refresh services](command:x402.refresh)\n[Inspect an endpoint](command:x402.inspect)\n\nTo pay for a service you'll need an EVM wallet key.\n[Set wallet key](command:x402.setWalletKey)"
 			}
 		],
 		"commands": [
 			{
-				"command": "threewsX402.refresh",
+				"command": "x402.refresh",
 				"title": "x402: Refresh Bazaar",
 				"icon": "$(refresh)"
 			},
 			{
-				"command": "threewsX402.search",
+				"command": "x402.search",
 				"title": "x402: Search Bazaar",
 				"icon": "$(search)"
 			},
 			{
-				"command": "threewsX402.setFilters",
+				"command": "x402.setFilters",
 				"title": "x402: Set Bazaar Filters",
 				"icon": "$(filter)"
 			},
 			{
-				"command": "threewsX402.inspect",
+				"command": "x402.setBazaarUrl",
+				"title": "x402: Set Bazaar Discovery Host"
+			},
+			{
+				"command": "x402.inspect",
 				"title": "x402: Inspect Endpoint (decode 402 challenge)"
 			},
 			{
-				"command": "threewsX402.openService",
+				"command": "x402.openService",
 				"title": "x402: Open Service Details"
 			},
 			{
-				"command": "threewsX402.pay",
+				"command": "x402.pay",
 				"title": "x402: Pay & Call Endpoint"
 			},
 			{
-				"command": "threewsX402.setWalletKey",
+				"command": "x402.setWalletKey",
 				"title": "x402: Set Wallet Key"
 			},
 			{
-				"command": "threewsX402.clearWalletKey",
+				"command": "x402.clearWalletKey",
 				"title": "x402: Clear Wallet Key"
 			},
 			{
-				"command": "threewsX402.scaffoldEndpoint",
+				"command": "x402.scaffoldEndpoint",
 				"title": "x402: Scaffold a Paid Endpoint"
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "threewsX402.search",
-					"when": "view == threewsX402.bazaar",
+					"command": "x402.search",
+					"when": "view == x402.bazaar",
 					"group": "navigation@1"
 				},
 				{
-					"command": "threewsX402.setFilters",
-					"when": "view == threewsX402.bazaar",
+					"command": "x402.setFilters",
+					"when": "view == x402.bazaar",
 					"group": "navigation@2"
 				},
 				{
-					"command": "threewsX402.refresh",
-					"when": "view == threewsX402.bazaar",
+					"command": "x402.refresh",
+					"when": "view == x402.bazaar",
 					"group": "navigation@3"
 				}
 			],
 			"view/item/context": [
 				{
-					"command": "threewsX402.pay",
-					"when": "view == threewsX402.bazaar && viewItem == x402service",
+					"command": "x402.pay",
+					"when": "view == x402.bazaar && viewItem == x402service",
 					"group": "inline"
 				}
 			]
 		},
 		"configuration": {
-			"title": "three.ws x402",
+			"title": "x402",
 			"properties": {
-				"threewsX402.origin": {
+				"x402.bazaarUrl": {
 					"type": "string",
-					"default": "https://three.ws",
-					"description": "Origin that hosts the bazaar discovery API (/api/bazaar/list, /api/bazaar/search)."
+					"default": "",
+					"description": "Origin that hosts the bazaar discovery API (serves /api/bazaar/list and /api/bazaar/search). Leave blank to disable discovery — inspecting or paying a specific endpoint URL needs no host."
 				},
-				"threewsX402.maxPaymentUsd": {
+				"x402.maxPaymentUsd": {
 					"type": "number",
 					"default": 0.1,
 					"description": "Spending cap per request, in USD. Any auto-payment above this is refused before signing."
 				},
-				"threewsX402.confirmEachPayment": {
+				"x402.confirmEachPayment": {
 					"type": "boolean",
 					"default": true,
 					"description": "Show a confirmation dialog with the exact USD amount before signing each payment."
 				},
-				"threewsX402.network": {
+				"x402.network": {
 					"type": "string",
 					"default": "eip155:8453",
 					"description": "Preferred CAIP-2 network for payment when an endpoint accepts several (default: Base mainnet)."
 				},
-				"threewsX402.filters": {
+				"x402.filters": {
 					"type": "object",
 					"default": {
 						"type": "http"

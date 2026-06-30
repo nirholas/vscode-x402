@@ -2,11 +2,7 @@
 // payment challenge into a readable summary using the same parser the payer
 // uses. Reachable as a standalone command (paste a URL) or from a bazaar item.
 
-import {
-	parseChallenge,
-	selectRequirement,
-	amountToUsd,
-} from '../../x402-fetch/src/parse-challenge.js';
+import { parseChallenge, selectRequirement, amountToUsd } from './vendor/x402-fetch.js';
 
 /**
  * @returns {Promise<{ status:number, paid:boolean, accepts:any[], chosen:any|null, resource:any, raw:any }>}
@@ -16,7 +12,7 @@ export async function inspectEndpoint(url, { method = 'GET', preferNetwork } = {
 		method,
 		headers: { accept: 'application/json' },
 		// MCP endpoints expect a body; for inspection a HEAD-ish GET is enough to
-		// trigger the 402 on three.ws + CDP merchants.
+		// trigger the 402 on any compliant x402 merchant.
 	});
 
 	if (res.status !== 402) {

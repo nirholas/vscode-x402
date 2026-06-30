@@ -10,7 +10,7 @@ let panel = null;
 export function showService(context, item) {
 	if (!panel) {
 		panel = vscode.window.createWebviewPanel(
-			'threewsX402.service',
+			'x402.service',
 			'x402 Service',
 			vscode.ViewColumn.Active,
 			{ enableScripts: true, retainContextWhenHidden: true },
