@@ -4,7 +4,7 @@
 
 [![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/nirholas.vscode-x402?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nirholas.vscode-x402)
 [![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/nirholas.vscode-x402?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nirholas.vscode-x402)
-[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](./LICENSE)
 
 ---
 
@@ -254,5 +254,4 @@ to package a `.vsix`.
 
 ## License
 
-Apache-2.0 · authored by [nirholas](https://github.com/nirholas) ·
-[github.com/nirholas/vscode-x402](https://github.com/nirholas/vscode-x402)
+Proprietary — Copyright (c) 2026 nirholas. All Rights Reserved. Unauthorized use, copying, modification, or distribution is prohibited. See [LICENSE](./LICENSE).

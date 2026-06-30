@@ -17,7 +17,8 @@
 //   privateKeyToWallet(pk)             -> { address, signTypedData(td) }
 //   withX402(wallet, options?)         -> fetch-compatible paid fetch
 //
-// Author: nirholas. License: Apache-2.0.
+// Author: nirholas. Proprietary — Copyright (c) 2026 nirholas. All Rights Reserved.
+// SPDX-License-Identifier: LicenseRef-Proprietary
 
 /* ────────────────────────────── keccak-256 ────────────────────────────── */
 // Keccak-256 (the hash Ethereum uses — NOT FIPS-202 SHA3, which differs only in

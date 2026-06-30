@@ -87,4 +87,4 @@ for `nirholas` and is handled by the maintainer / the `publish` GitHub workflow.
 3. Update the README / docs / changelog as applicable.
 4. Open a PR describing what changed and how you tested it.
 
-By contributing you agree your work is licensed under Apache-2.0.
+Proprietary — Copyright (c) 2026 nirholas. All Rights Reserved. By contributing you agree your work becomes part of this proprietary software, and that unauthorized use, copying, modification, or distribution is prohibited. See [LICENSE](./LICENSE).
