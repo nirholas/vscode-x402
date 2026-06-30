@@ -18,7 +18,9 @@
 		"vscode": "^1.85.0"
 	},
 	"categories": [
-		"Other"
+		"Other",
+		"Snippets",
+		"Education"
 	],
 	"keywords": [
 		"x402",
@@ -27,10 +29,18 @@
 		"micropayments",
 		"agent",
 		"bazaar",
-		"web3"
+		"web3",
+		"api",
+		"mcp",
+		"base",
+		"402"
 	],
 	"main": "./dist/extension.js",
 	"icon": "media/icon.png",
+	"galleryBanner": {
+		"color": "#0B0E14",
+		"theme": "dark"
+	},
 	"activationEvents": [],
 	"contributes": {
 		"viewsContainers": {
