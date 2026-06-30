@@ -8,11 +8,10 @@
 	"homepage": "https://three.ws",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/nirholas/three.ws.git",
-		"directory": "packages/vscode-x402"
+		"url": "git+https://github.com/nirholas/vscode-x402.git"
 	},
 	"bugs": {
-		"url": "https://github.com/nirholas/three.ws/issues"
+		"url": "https://github.com/nirholas/vscode-x402/issues"
 	},
 	"engines": {
 		"vscode": "^1.85.0"
