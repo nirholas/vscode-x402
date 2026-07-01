@@ -2,11 +2,21 @@
 
 > Browse an [x402](https://github.com/coinbase/x402) bazaar, decode `402 Payment Required` challenges, and pay-per-call paid APIs and MCP tools with USDC — without leaving your editor.
 
-[![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/nirholas.vscode-x402?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nirholas.vscode-x402)
-[![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/nirholas.vscode-x402?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=nirholas.vscode-x402)
+[![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/threews.vscode-x402?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402)
+[![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/threews.vscode-x402?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402)
+[![Open VSX Version](https://img.shields.io/open-vsx/v/threews/vscode-x402?label=Open%20VSX)](https://open-vsx.org/extension/threews/vscode-x402)
 [![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](./LICENSE)
 
+**Install:** `code --install-extension threews.vscode-x402` · [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402) · [Open VSX](https://open-vsx.org/extension/threews/vscode-x402) (Cursor / VSCodium / Windsurf)
+
 ---
+
+## Why you'll love it
+
+- **Never leave your editor.** Paste a URL, see exactly what a call costs, pay, and get the response + on-chain receipt inline — no browser, no Postman, no hand-rolled 402 handling.
+- **Safe by default.** Your wallet key lives in the OS keychain (never a `.env` you'll commit), and a per-call spending cap means an agent loop can't drain you.
+- **Works on any x402 endpoint, zero setup.** Inspect and pay any compliant URL with no account, no API key, and no bazaar host required. Provider-neutral by design.
+- **Both sides of the market.** Discover paid APIs and MCP tools in the bazaar sidebar, and `scaffold` a working paid endpoint of your own in one command.
 
 ## What is this?
 
@@ -50,10 +60,10 @@ optional — inspecting and paying a single endpoint URL needs zero configuratio
 
 **From the Marketplace** — open the Extensions view (<kbd>Ctrl/Cmd</kbd> +
 <kbd>Shift</kbd> + <kbd>X</kbd>), search for **x402**, and install
-`nirholas.vscode-x402`. Or run from the Command Palette:
+`threews.vscode-x402`. Or run from the Command Palette:
 
 ```
-ext install nirholas.vscode-x402
+ext install threews.vscode-x402
 ```
 
 **From a `.vsix`** — download a release `.vsix` (or build one with

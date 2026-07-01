@@ -1,8 +1,8 @@
 {
   "name": "vscode-x402",
   "displayName": "x402 — Pay-per-call APIs",
-  "description": "Browse an x402 bazaar, decode 402 payment challenges, and pay-per-call paid APIs and MCP tools with USDC — without leaving VS Code.",
-  "version": "0.1.0",
+  "description": "Inspect, pay, and sell x402 pay-per-call APIs and MCP tools in USDC — without leaving VS Code. Keychain-secured wallet, per-call spend caps, provider-neutral.",
+  "version": "0.1.1",
   "publisher": "threews",
   "author": "nirholas",
   "license": "UNLICENSED",
