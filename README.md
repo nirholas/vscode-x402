@@ -5,8 +5,6 @@
 [![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/threews.vscode-x402?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402)
 [![VS Code Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/threews.vscode-x402?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402)
 [![Open VSX Version](https://img.shields.io/open-vsx/v/threews/vscode-x402?label=Open%20VSX)](https://open-vsx.org/extension/threews/vscode-x402)
-[![License: Proprietary](https://img.shields.io/badge/license-Proprietary-red.svg)](./LICENSE)
-
 **Install:** `code --install-extension threews.vscode-x402` · [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402) · [Open VSX](https://open-vsx.org/extension/threews/vscode-x402) (Cursor / VSCodium / Windsurf)
 
 ---
@@ -264,4 +262,4 @@ to package a `.vsix`.
 
 ## License
 
-Proprietary — Copyright (c) 2026 nirholas. All Rights Reserved. Unauthorized use, copying, modification, or distribution is prohibited. See [LICENSE](./LICENSE).
+All rights reserved. See [LICENSE](LICENSE).
