@@ -1,4 +1,15 @@
 dist/
 node_modules/
 *.vsix
-*.vsix
+
+# Environment
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# System files
+.DS_Store
+Thumbs.db
