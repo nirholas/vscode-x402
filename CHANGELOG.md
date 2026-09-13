@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+
+- Put $THREE payment setup and its Solana contract address in the Marketplace overview.
+- Link the extension to the full three.ws setup guide.
+
 ## 0.2.0
 
 Solana payments and dual-wallet support.

@@ -1,8 +1,8 @@
 {
   "name": "vscode-x402",
   "displayName": "x402 — Pay-per-call APIs",
-  "description": "Inspect and call x402 APIs with USDC or $THREE on Solana and USDC on Base, with keys secured in the OS keychain.",
-  "version": "0.2.0",
+  "description": "Pay x402 APIs with $THREE or USDC on Solana, or USDC on Base, with keys secured in the OS keychain.",
+  "version": "0.2.1",
   "publisher": "threews",
   "author": "nirholas",
   "license": "SEE LICENSE IN LICENSE",
@@ -33,6 +33,8 @@
     "api",
     "mcp",
     "base",
+    "solana",
+    "three",
     "402"
   ],
   "type": "module",
