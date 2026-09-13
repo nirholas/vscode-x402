@@ -1,163 +1,100 @@
-# Usage walkthroughs
+# x402 — Pay-per-call APIs for VS Code
 
-In-depth, step-by-step guides for every flow in the **x402 — Pay-per-call APIs**
-extension. For the quick version and the full commands/settings tables, see the
-[README](../README.md). Throughout, *"run a command"* means open the Command
-Palette (<kbd>Ctrl/Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>) and type the
-command title.
+Browse the [x402](https://three.ws/x402.md) bazaar, decode `402 Payment Required`
+challenges, and pay per call for paid APIs and MCP tools in **USDC or $THREE on
+Solana**, or **USDC on Base** and other EVM chains, without leaving your editor.
+Powered by [three.ws](https://three.ws).
 
----
+[![VS Code Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/threews.vscode-x402?label=Marketplace&logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402)
+[![Open VSX Version](https://img.shields.io/open-vsx/v/threews/vscode-x402?label=Open%20VSX)](https://open-vsx.org/extension/threews/vscode-x402)
 
-## 1. Inspect any x402 URL
+Install from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=threews.vscode-x402), or run:
 
-The fastest way to understand a paid endpoint — read-only, no wallet, no host,
-no signing.
+```bash
+code --install-extension threews.vscode-x402
+```
 
-1. Run **x402: Inspect Endpoint (decode 402 challenge)**.
-2. When prompted, paste the endpoint URL, e.g.:
+x402 is a protocol for developers and agents, not end users, so unlike a 3D
+viewer this is genuinely editor-native: the people wiring up paid endpoints and
+calling them live in VS Code.
 
-   ```
-   https://your-api.example.com/x402/summarize
-   ```
+## Features
 
-3. The extension sends an unpaid `GET` and reads the response:
-   - If the status is **not** `402`, it reports that no payment is required (a
-     `2xx`) or that the endpoint didn't issue a challenge.
-   - If the status is `402`, it parses the challenge and writes one line per
-     accepted requirement to the **x402** output channel:
+- **Bazaar sidebar** — live list of paid x402 HTTP APIs and MCP tools, merged
+  across every facilitator via the three.ws discovery proxy
+  (`/api/bazaar/list`, `/api/bazaar/search`). Filter by type, price, and tag;
+  full-text search.
+- **Inspect an endpoint** — paste any URL and decode its 402 challenge: every
+  accepted network, asset, scheme, price (in USD), and `payTo`, with the rail
+  each accept settles on (`[solana]` / `[evm]`) and the one this wallet can
+  satisfy flagged.
+- **Pay & call** — make a real paid request and settle it on the right rail
+  automatically: **USDC or $THREE on Solana** via the real `@x402/svm` `exact`
+  scheme, or **USDC on Base** and other EVM chains via
+  [`@three-ws/x402-fetch`](https://www.npmjs.com/package/@three-ws/x402-fetch). The exact USD amount, token, and
+  network are shown and confirmed before signing; a spending cap blocks anything
+  above your limit. The response body and on-chain settlement receipt (tx hash)
+  render inline.
+- **Two secure wallets** — an EVM key and a Solana key, each stored only in VS
+  Code SecretStorage (the OS keychain). Never in settings, never on disk in
+  plaintext. The status bar shows both derived addresses.
+- **Scaffold a paid endpoint** — generate a working `api/x402/<slug>.js` that
+  follows the repo's canonical `paidEndpoint()` pattern, wired end-to-end from
+  the first deploy.
 
-     ```
-     Status: 402 Payment Required
+## Setup
 
-     #1 eip155:8453 · exact · $0.010000 0x8335…2913 ← payable by this wallet
-          payTo: 0xMerchantReceivingAddress…
-     ```
+1. Install the extension and open the **x402 Bazaar** view in the activity bar. Set the Bazaar discovery host to `https://three.ws`, or inspect a specific endpoint directly.
+2. Set a wallet key for the rail you want to pay on:
+   - **x402: Set Solana Wallet Key** — a base58 secret key (or JSON byte array)
+     for a funded Solana wallet holding USDC and/or $THREE.
+   - **x402: Set EVM Wallet Key** — a `0x` + 64 hex key for a funded Base USDC
+     wallet.
+   Either or both; keys are stored in your OS keychain.
+3. Browse or search the bazaar, open a service, and **Pay & call**.
 
-   - The `← payable by this wallet` marker flags the requirement that matches your
-     preferred network (`x402.network`) and a USDC EIP-3009 asset your EVM key can
-     sign. If none match, a warning explains that no requirement is satisfiable
-     (for example, a Solana-only service).
+## Settings
 
-No private key is read and no request is signed during inspection.
+| Setting | Default | Purpose |
+|---|---|---|
+| `x402.bazaarUrl` | `""` | Optional host of the bazaar discovery API. Use `https://three.ws` for the three.ws Bazaar. |
+| `x402.maxPaymentUsd` | `0.10` | Per-request spending cap, in USD. |
+| `x402.confirmEachPayment` | `true` | Confirm the exact amount before signing. |
+| `x402.network` | `""` (auto) | Preferred CAIP-2 network when a service accepts several (`solana:…` or `eip155:…`). Auto prefers USDC on Solana, then Base. |
+| `x402.preferToken` | `auto` | Token to pay when several are offered: `auto` (USDC first, then $THREE), `usdc`, or `three`. |
+| `x402.filters` | `{ "type": "http" }` | Default bazaar filters. |
 
----
+The USD spending cap applies to USDC payments. A non-stable token such as
+`$THREE` is always shown in token units and always requires explicit
+confirmation because the 402 challenge does not provide a fiat conversion.
 
-## 2. Pay an endpoint
+## How payment works
 
-### One-time: set a wallet key
+The extension reads the 402 challenge and picks a payable requirement across both
+rails, honouring `network` and `preferToken`.
 
-1. Run **x402: Set Wallet Key**.
-2. Paste an EVM private key in raw hex form — `0x` followed by exactly 64
-   hexadecimal characters. The input is masked.
-3. The extension validates that the key derives a real address, then stores it in
-   VS Code SecretStorage (your OS keychain). The status bar updates to
-   `x402 0xabc…1234`.
+- **Solana** (`solana:*`): the real `@x402/svm` `exact` scheme signs an SPL
+  transfer of the selected token (USDC or **$THREE**, mint
+  `FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump`) from your key and retries with
+  the `X-PAYMENT` proof. This is the same buyer `@three-ws/x402-mcp` uses.
+- **EVM** (`eip155:*`): [`@three-ws/x402-fetch`](https://www.npmjs.com/package/@three-ws/x402-fetch) signs a USDC
+  **EIP-3009** `transferWithAuthorization` on Base (or another EVM chain) and
+  retries with the proof.
 
-Run **x402: Clear Wallet Key** at any time to remove it.
+Either way the merchant settles on-chain and returns the work plus a settlement
+receipt, rendered inline with the token, network, and transaction hash. A
+service that only accepts a rail you have no key for is flagged, and the
+extension offers to set the matching wallet.
 
-> **Funding:** by default the wallet pays USDC on **Base mainnet**. Fund the
-> address shown in the status bar with USDC (and a little ETH for gas, if your
-> facilitator requires it) before paying.
+## Development
 
-### Pay & call
+```bash
+npm install
+npm run build        # bundle to dist/extension.cjs
+npm run watch        # rebuild on change
+npm test             # requirement selection, token rules, scaffold template
+```
 
-1. Run **x402: Pay & Call Endpoint** and paste the endpoint URL (or click a
-   service in the bazaar sidebar — see [§3](#3-browse-a-bazaar)). The **service
-   detail panel** opens.
-2. In the panel:
-   - Choose the **Method** (`GET` or `POST`).
-   - For `POST` or MCP calls, edit the **Request body** (JSON). MCP services are
-     pre-filled with a `tools/call` JSON-RPC envelope.
-   - Click **Pay & call**.
-3. The extension pre-checks the 402 to read the live price and then:
-   - If the endpoint isn't actually paid (no `402`), it just runs the request —
-     no signing — and shows the response as "free".
-   - If the price exceeds `x402.maxPaymentUsd`, it prompts **Raise cap & pay**.
-   - Otherwise, with `x402.confirmEachPayment` on (default), it shows a modal:
+Press <kbd>F5</kbd> in VS Code to launch an Extension Development Host.
 
-     > Pay $0.010000 from 0xabc…1234 to call summarize?
-
-4. On confirmation, it signs a USDC EIP-3009 `transferWithAuthorization`, retries
-   the request with the `X-PAYMENT` header, and renders in the panel:
-   - **Status**, **Paid** (USD), and the **From** address.
-   - The **Tx** hash and network from the settlement receipt, when present.
-   - The full response body (pretty-printed if JSON).
-   - A notification with the status and short tx hash also appears.
-
-### Spend controls
-
-- **`x402.maxPaymentUsd`** (default `$0.10`) — the hard per-call ceiling. Nothing
-  above it is signed without an explicit *Raise cap & pay*.
-- **`x402.confirmEachPayment`** (default `true`) — set `false` to skip the
-  per-call modal (the cap still applies).
-- **`x402.network`** (default `eip155:8453`) — which CAIP-2 network to prefer when
-  an endpoint accepts several.
-
----
-
-## 3. Browse a bazaar
-
-A bazaar is any host that serves the discovery API (`/api/bazaar/list` and
-`/api/bazaar/search`). Discovery is opt-in; the extension ships with no default.
-
-1. Run **x402: Set Bazaar Discovery Host** and enter the origin, e.g.
-   `https://your-bazaar.example.com`. This saves `x402.bazaarUrl`. (Leave it
-   blank to disable discovery again.)
-2. Open the **x402 Bazaar** view from the activity bar. The sidebar lists
-   services, each showing `price · type · networks`. Hover a row for a Markdown
-   tooltip with the resource URL, price, networks, facilitator, and tags.
-3. Use the title-bar actions:
-   - **Search** (`x402.search`) — full-text query; an empty query lists
-     everything.
-   - **Set Filters** (`x402.setFilters`) — choose type (`http` / `mcp`), an
-     optional max price (in USDC atomics), and an optional tag.
-   - **Refresh** (`x402.refresh`) — re-fetch the list.
-4. Click any service to open its detail panel, or use the inline **Pay** action on
-   a service row. From there, pay exactly as in [§2](#2-pay-an-endpoint).
-
-If the discovery host is unreachable or returns an error, the sidebar shows the
-error inline rather than failing silently.
-
----
-
-## 4. Scaffold a paid endpoint
-
-Generate a standalone, framework-agnostic paid endpoint you can drop into any
-Node server.
-
-1. Open a workspace folder (the file is written into it).
-2. Run **x402: Scaffold a Paid Endpoint**.
-3. Answer the prompts:
-   - **Slug** — lowercase letters, digits, and hyphens, e.g. `summarize`. The
-     file lands at `api/x402/summarize.js`.
-   - **Price per call (USD)** — a positive number, e.g. `0.01`. Converted to USDC
-     atomics (6 decimals) in the challenge.
-   - **Description** — shown to buyers in the 402 challenge.
-4. The file opens. It is a self-contained handler that:
-   - Returns a `402` challenge (with your price, `payTo`, and USDC-on-Base accept)
-     when there's no `X-PAYMENT` header.
-   - Verifies the buyer's payment proof through a facilitator, then runs `run()`
-     and returns the result.
-5. Wire it up:
-   - Set `X402_RESOURCE_URL` to the public URL the endpoint is served from.
-   - Set `X402_PAY_TO` to your receiving wallet address.
-   - Set `X402_FACILITATOR_VERIFY_URL` to a facilitator `/verify` endpoint.
-   - Replace the echo in `run(body)` with your real service logic.
-6. Adapt the generic `(req, res)` handler to your runtime (Express, Vercel,
-   Cloudflare Workers, etc.) — the request/response shims are intentionally
-   minimal.
-
-Test it end-to-end from this same extension: run **x402: Inspect Endpoint**
-against its URL to confirm the challenge, then **x402: Pay & Call Endpoint** to
-pay it.
-
----
-
-## Where things are stored
-
-| Thing | Location |
-|---|---|
-| Wallet private key | VS Code SecretStorage (OS keychain) — never on disk in plaintext |
-| Bazaar host, caps, network, filters | VS Code settings (`x402.*`) |
-| Scaffolded endpoint | `api/x402/<slug>.js` in your workspace |
-| Inspect output | The **x402** output channel |
+See [LICENSE](./LICENSE). Source: [nirholas/vscode-x402](https://github.com/nirholas/vscode-x402).

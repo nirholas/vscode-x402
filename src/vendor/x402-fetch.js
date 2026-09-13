@@ -418,7 +418,7 @@ function isEvmNetwork(net) {
 // zero-dep wrapper signs. Skip Permit2 siblings (extra.assetTransferMethod ===
 // 'permit2') — signing typed data against them yields a payload the facilitator
 // rejects.
-function isEip3009Accept(accept) {
+export function isEip3009Accept(accept) {
 	if (!isEvmNetwork(accept?.network)) return false;
 	if (accept.scheme && accept.scheme !== 'exact') return false;
 	const method = accept?.extra?.assetTransferMethod;

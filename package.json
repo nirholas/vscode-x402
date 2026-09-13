@@ -1,8 +1,8 @@
 {
   "name": "vscode-x402",
   "displayName": "x402 — Pay-per-call APIs",
-  "description": "Inspect, pay, and sell x402 pay-per-call APIs and MCP tools in USDC — without leaving VS Code. Keychain-secured wallet, per-call spend caps, provider-neutral.",
-  "version": "0.1.1",
+  "description": "Inspect and call x402 APIs with USDC or $THREE on Solana and USDC on Base, with keys secured in the OS keychain.",
+  "version": "0.2.0",
   "publisher": "threews",
   "author": "nirholas",
   "license": "SEE LICENSE IN LICENSE",
@@ -35,7 +35,8 @@
     "base",
     "402"
   ],
-  "main": "./dist/extension.js",
+  "type": "module",
+  "main": "./dist/extension.cjs",
   "icon": "media/icon.png",
   "galleryBanner": {
     "color": "#0B0E14",
@@ -64,7 +65,7 @@
     "viewsWelcome": [
       {
         "view": "x402.bazaar",
-        "contents": "Browse paid x402 APIs and MCP tools from a bazaar.\nSet a discovery host to list services, or inspect/pay any endpoint URL directly — that needs no configuration.\n[Set bazaar host](command:x402.setBazaarUrl)\n[Refresh services](command:x402.refresh)\n[Inspect an endpoint](command:x402.inspect)\n\nTo pay for a service you'll need an EVM wallet key.\n[Set wallet key](command:x402.setWalletKey)"
+        "contents": "Browse paid x402 APIs and MCP tools from a bazaar.\nSet a discovery host to list services, or inspect/pay any endpoint URL directly — that needs no configuration.\n[Set bazaar host](command:x402.setBazaarUrl)\n[Refresh services](command:x402.refresh)\n[Inspect an endpoint](command:x402.inspect)\n\nSet either wallet key to pay. Solana supports USDC and $THREE; EVM supports USDC.\n[Set Solana wallet key](command:x402.setSolanaWalletKey)\n[Set EVM wallet key](command:x402.setWalletKey)"
       }
     ],
     "commands": [
@@ -101,11 +102,19 @@
       },
       {
         "command": "x402.setWalletKey",
-        "title": "x402: Set Wallet Key"
+        "title": "x402: Set EVM Wallet Key"
       },
       {
         "command": "x402.clearWalletKey",
-        "title": "x402: Clear Wallet Key"
+        "title": "x402: Clear EVM Wallet Key"
+      },
+      {
+        "command": "x402.setSolanaWalletKey",
+        "title": "x402: Set Solana Wallet Key"
+      },
+      {
+        "command": "x402.clearSolanaWalletKey",
+        "title": "x402: Clear Solana Wallet Key"
       },
       {
         "command": "x402.scaffoldEndpoint",
@@ -158,8 +167,18 @@
         },
         "x402.network": {
           "type": "string",
-          "default": "eip155:8453",
-          "description": "Preferred CAIP-2 network for payment when an endpoint accepts several (default: Base mainnet)."
+          "default": "",
+          "description": "Preferred CAIP-2 network when an endpoint accepts several. Leave empty for automatic selection, which prefers Solana USDC and then Base USDC."
+        },
+        "x402.preferToken": {
+          "type": "string",
+          "enum": [
+            "auto",
+            "usdc",
+            "three"
+          ],
+          "default": "auto",
+          "description": "Token to pay when a service accepts several: automatic, USDC, or $THREE."
         },
         "x402.filters": {
           "type": "object",
@@ -173,11 +192,19 @@
   },
   "scripts": {
     "build": "node build.mjs",
+    "test": "node --test \"test/*.test.mjs\"",
     "watch": "node build.mjs --watch",
     "vscode:prepublish": "node build.mjs --production"
   },
+  "dependencies": {
+    "@solana/kit": "5.5.1",
+    "@x402/core": "2.14.0",
+    "@x402/fetch": "2.14.0",
+    "@x402/svm": "2.14.0",
+    "bs58": "^6.0.0"
+  },
   "devDependencies": {
     "@types/vscode": "^1.85.0",
-    "esbuild": "^0.21.0"
+    "esbuild": "^0.28.2"
   }
 }

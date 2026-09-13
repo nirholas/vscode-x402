@@ -10,7 +10,7 @@ const watch = process.argv.includes('--watch');
 const options = {
 	entryPoints: ['src/extension.js'],
 	bundle: true,
-	outfile: 'dist/extension.js',
+	outfile: 'dist/extension.cjs',
 	platform: 'node',
 	format: 'cjs',
 	target: 'node18',

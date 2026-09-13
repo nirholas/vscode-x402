@@ -8,7 +8,7 @@ import * as vscode from 'vscode';
 import { BazaarProvider } from './tree.js';
 import { inspectEndpoint, summarize } from './inspect.js';
 import { showService } from './panel.js';
-import { setKey, clearKey, getAddress } from './wallet.js';
+import { setKey, clearKey, getAddress, setSolanaKey, clearSolanaKey, getSolanaAddress } from './wallet.js';
 import { scaffoldEndpoint } from './scaffold.js';
 
 let output;
@@ -20,7 +20,7 @@ export function activate(context) {
 	const tree = vscode.window.createTreeView('x402.bazaar', { treeDataProvider: provider });
 
 	statusBar = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	statusBar.command = 'x402.setWalletKey';
+	statusBar.command = 'x402.manageWallet';
 	context.subscriptions.push(output, tree, statusBar);
 	refreshStatusBar(context);
 
@@ -86,8 +86,43 @@ export function activate(context) {
 
 	reg('x402.clearWalletKey', async () => {
 		await clearKey(context);
-		vscode.window.showInformationMessage('x402 wallet key cleared.');
+		vscode.window.showInformationMessage('x402 EVM wallet key cleared.');
 		refreshStatusBar(context);
+	});
+
+	reg('x402.setSolanaWalletKey', async () => {
+		const address = await setSolanaKey(context);
+		if (address) {
+			vscode.window.showInformationMessage(`x402 Solana wallet set: ${address}`);
+			refreshStatusBar(context);
+		}
+	});
+
+	reg('x402.clearSolanaWalletKey', async () => {
+		await clearSolanaKey(context);
+		vscode.window.showInformationMessage('x402 Solana wallet key cleared.');
+		refreshStatusBar(context);
+	});
+
+	reg('x402.manageWallet', async () => {
+		const [evm, sol] = await Promise.all([getAddress(context), getSolanaAddress(context)]);
+		const pick = await vscode.window.showQuickPick(
+			[
+				{ label: '$(key) Set Solana wallet key', detail: sol ? `Current: ${sol}` : 'Pay USDC or $THREE on Solana', id: 'setSol' },
+				{ label: '$(key) Set EVM wallet key', detail: evm ? `Current: ${evm}` : 'Pay USDC on Base and other EVM chains', id: 'setEvm' },
+				...(sol ? [{ label: '$(trash) Clear Solana wallet key', id: 'clrSol' }] : []),
+				...(evm ? [{ label: '$(trash) Clear EVM wallet key', id: 'clrEvm' }] : []),
+			],
+			{ title: 'x402 wallets' },
+		);
+		if (!pick) return;
+		const cmd = {
+			setSol: 'x402.setSolanaWalletKey',
+			setEvm: 'x402.setWalletKey',
+			clrSol: 'x402.clearSolanaWalletKey',
+			clrEvm: 'x402.clearWalletKey',
+		}[pick.id];
+		if (cmd) await vscode.commands.executeCommand(cmd);
 	});
 
 	reg('x402.scaffoldEndpoint', () => scaffoldEndpoint());
@@ -96,13 +131,20 @@ export function activate(context) {
 }
 
 async function refreshStatusBar(context) {
-	const address = await getAddress(context);
-	if (address) {
-		statusBar.text = `$(key) x402 ${address.slice(0, 6)}…${address.slice(-4)}`;
-		statusBar.tooltip = `x402 wallet: ${address}\nClick to change`;
+	const [evm, sol] = await Promise.all([getAddress(context), getSolanaAddress(context)]);
+	const short = (a) => `${a.slice(0, 4)}…${a.slice(-4)}`;
+	const parts = [];
+	if (sol) parts.push(`◎ ${short(sol)}`);
+	if (evm) parts.push(`⟠ ${short(evm)}`);
+	if (parts.length) {
+		statusBar.text = `$(key) x402 ${parts.join('  ')}`;
+		statusBar.tooltip =
+			`x402 wallets — click to manage\n` +
+			(sol ? `Solana: ${sol}\n` : 'Solana: not set\n') +
+			(evm ? `EVM: ${evm}` : 'EVM: not set');
 	} else {
 		statusBar.text = '$(key) x402: no wallet';
-		statusBar.tooltip = 'No x402 wallet key set — click to set one';
+		statusBar.tooltip = 'No x402 wallet key set — click to set a Solana or EVM key';
 	}
 	statusBar.show();
 }
@@ -112,8 +154,13 @@ async function runInspect(url) {
 	output.show(true);
 	output.appendLine(`Inspecting ${url}`);
 	const network = vscode.workspace.getConfiguration('x402').get('network');
+	const preferToken = vscode.workspace.getConfiguration('x402').get('preferToken', 'auto');
 	try {
-		const result = await inspectEndpoint(url, { preferNetwork: network });
+		const result = await inspectEndpoint(url, {
+			preferNetwork: network || undefined,
+			preferToken,
+			wallets: { evm: true, solana: true },
+		});
 		summarize(result).forEach((l) => output.appendLine(l));
 	} catch (e) {
 		output.appendLine(`Error: ${e?.message || e}`);
