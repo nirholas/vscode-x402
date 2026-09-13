@@ -1,6 +1,6 @@
 # x402 — Pay-per-call APIs for VS Code
 
-Browse the [x402](https://three.ws/x402.md) bazaar, decode `402 Payment Required`
+Browse the [x402](https://three.ws/docs/x402-vscode) bazaar, decode `402 Payment Required`
 challenges, and pay per call for paid APIs and MCP tools in **USDC or $THREE on
 Solana**, or **USDC on Base** and other EVM chains, without leaving your editor.
 Powered by [three.ws](https://three.ws).
@@ -17,6 +17,20 @@ code --install-extension threews.vscode-x402
 x402 is a protocol for developers and agents, not end users, so unlike a 3D
 viewer this is genuinely editor-native: the people wiring up paid endpoints and
 calling them live in VS Code.
+
+## Pay with $THREE on Solana
+
+Choose **$THREE** in the `x402.preferToken` setting to prefer services that
+accept the three.ws ecosystem token.
+
+- **Symbol:** `$THREE`
+- **Network:** Solana
+- **Contract address:** `FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump`
+- **Payment scheme:** x402 `exact` through `@x402/svm`
+
+The extension only selects $THREE when the endpoint advertises that exact mint
+in its 402 challenge. It shows the token amount, network, paying address, and
+recipient before signing. Every $THREE payment requires explicit confirmation.
 
 ## Features
 
