@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>@three-ws/vscode-x402: Browse the x402 bazaar, decode 402 payment challenges, and pay per cal</title>
+<meta name="description" content="Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.">
+<link rel="canonical" href="https://nirholas.github.io/vscode-x402/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="three.ws">
+<meta property="og:title" content="@three-ws/vscode-x402">
+<meta property="og:description" content="Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.">
+<meta property="og:url" content="https://nirholas.github.io/vscode-x402/">
+<meta property="og:image" content="https://nirholas.github.io/vscode-x402/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="@three-ws/vscode-x402">
+<meta name="twitter:description" content="Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.">
+<meta name="twitter:image" content="https://nirholas.github.io/vscode-x402/og.png">
+<meta name="keywords" content="x402, payments, usdc, three, solana, base, micropayments, agent, mcp, bazaar, web3, ai-agents, three.ws">
+<link rel="alternate" type="text/plain" href="llms.txt" title="llms.txt">
+<link rel="icon" href="https://three.ws/three-ws-mcp-icon.svg" type="image/svg+xml">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"@three-ws/vscode-x402","description":"Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.","codeRepository":"https://github.com/nirholas/vscode-x402","programmingLanguage":"JavaScript","license":"https://spdx.org/licenses/Apache-2.0.html","version":"0.2.2","url":"https://nirholas.github.io/vscode-x402/","author":{"@type":"Organization","name":"three.ws","url":"https://three.ws"},"keywords":"x402, payments, usdc, three, solana, base, micropayments, agent, mcp, bazaar, web3, ai-agents, three.ws"}</script>
+<style>:root{--bg:#fff;--fg:#111418;--mut:#586069;--line:#e3e6ea;--acc:#2563eb;--code:#f4f6f8;--card:#fafbfc}
+@media(prefers-color-scheme:dark){:root{--bg:#0b0d10;--fg:#e8eaed;--mut:#9aa3ad;--line:#232830;--acc:#6ea0ff;--code:#14181d;--card:#10141a}}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:var(--acc)}a:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:4px}
+header.bar{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar-in{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{font-weight:700;text-decoration:none;color:var(--fg)}
+.bar nav{margin-left:auto;display:flex;gap:16px;font-size:14px}
+.bar nav a{color:var(--mut);text-decoration:none;transition:color .15s}.bar nav a:hover{color:var(--fg)}
+.hero{max-width:1100px;margin:0 auto;padding:48px 16px 24px}
+.hero h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:0 0 12px;letter-spacing:-.02em}
+.hero p{color:var(--mut);max-width:70ch;font-size:18px;margin:0 0 24px}
+.install{display:flex;align-items:center;gap:8px;max-width:620px;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:6px 6px 6px 14px}
+.install code{flex:1;overflow-x:auto;white-space:nowrap;font:14px ui-monospace,SFMono-Regular,Menlo,monospace}
+.install button{border:0;background:var(--acc);color:#fff;border-radius:7px;padding:8px 14px;font:600 13px system-ui;cursor:pointer;transition:transform .12s,opacity .12s}
+.install button:hover{opacity:.9}.install button:active{transform:scale(.96)}
+.cta{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+.cta a{padding:9px 16px;border:1px solid var(--line);border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;color:var(--fg);transition:border-color .15s,transform .15s}
+.cta a:hover{border-color:var(--acc);transform:translateY(-1px)}.cta a.pri{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.layout{max-width:1100px;margin:0 auto;padding:8px 16px 64px;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:40px}
+@media(max-width:860px){.layout{grid-template-columns:minmax(0,1fr)}.toc{display:none}}
+.toc{position:sticky;top:76px;align-self:start;font-size:14px;border-left:1px solid var(--line);padding-left:16px}
+.toc p{margin:0 0 8px;font-weight:700;color:var(--mut);text-transform:uppercase;font-size:12px;letter-spacing:.06em}
+.toc ul{list-style:none;margin:0;padding:0}.toc li{margin:6px 0}.toc a{color:var(--mut);text-decoration:none}.toc a:hover{color:var(--fg)}
+main{min-width:0;overflow-wrap:anywhere}main pre code{overflow-wrap:normal}main img{max-width:100%;height:auto}
+main h2{margin-top:2.2em;padding-bottom:.3em;border-bottom:1px solid var(--line)}
+.anchor{margin-left:-1.1em;padding-right:.4em;text-decoration:none;opacity:0;color:var(--mut)}h2:hover .anchor,h3:hover .anchor,h4:hover .anchor{opacity:1}
+pre{background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px 16px;overflow-x:auto;font-size:14px;line-height:1.5}
+code{font:0.9em ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--code);padding:.15em .35em;border-radius:5px}pre code{background:none;padding:0}
+table{border-collapse:collapse;display:block;overflow-x:auto;max-width:100%}th,td{border:1px solid var(--line);padding:8px 12px;text-align:left}th{background:var(--card)}
+blockquote{margin:1em 0;padding:.2em 1em;border-left:4px solid var(--line);color:var(--mut)}
+footer{border-top:1px solid var(--line);color:var(--mut);font-size:14px}
+.foot-in{max-width:1100px;margin:0 auto;padding:24px 16px;display:flex;gap:16px;flex-wrap:wrap}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}</style>
+</head>
+<body>
+<header class="bar"><div class="bar-in">
+<a class="brand" href="https://nirholas.github.io/vscode-x402/">@three-ws/vscode-x402</a>
+<nav aria-label="Project links"><a href="https://github.com/nirholas/vscode-x402">GitHub</a><a href="https://www.npmjs.com/package/@three-ws/vscode-x402">npm</a><a href="llms.txt">llms.txt</a><a href="https://three.ws">three.ws</a></nav>
+</div></header>
+<section class="hero">
+<h1>@three-ws/vscode-x402</h1>
+<p>Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.</p>
+<div class="install" role="group" aria-label="Install command"><code>npm install @three-ws/vscode-x402</code><button type="button" data-copy="npm install @three-ws/vscode-x402">Copy</button></div>
+<div class="cta"><a class="pri" href="https://github.com/nirholas/vscode-x402">View on GitHub</a><a href="https://github.com/nirholas/vscode-x402/stargazers">Star the repo</a></div>
+</section>
+<div class="layout">
+<main id="content"><h1>three.ws — x402 for VS Code</h1>
+<p>Browse the <a href="https://three.ws/x402.md">x402</a> bazaar, decode <code>402 Payment Required</code>
+challenges, and pay per call for paid APIs and MCP tools in <strong>USDC or $THREE on
+Solana</strong>, or <strong>USDC on Base</strong> and other EVM chains, without leaving your editor.
+Powered by <a href="https://three.ws">three.ws</a>.</p>
+<p>x402 is a protocol for developers and agents, not end users, so unlike a 3D
+viewer this is genuinely editor-native: the people wiring up paid endpoints and
+calling them live in VS Code.</p>
+<h2 id="pay-with-three-on-solana"><a class="anchor" href="#pay-with-three-on-solana" aria-label="Link to this section">#</a>Pay with $THREE on Solana</h2>
+<p>Set <code>threewsX402.preferToken</code> to <code>three</code> to prefer endpoints that accept the
+three.ws ecosystem token.</p>
+<ul>
+<li><strong>Symbol:</strong> <code>$THREE</code></li>
+<li><strong>Network:</strong> Solana</li>
+<li><strong>Contract address:</strong> <code>FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump</code></li>
+<li><strong>Payment scheme:</strong> x402 <code>exact</code> through <code>@x402/svm</code></li>
+</ul>
+<p>The extension only selects $THREE when the endpoint advertises that exact mint
+in its 402 challenge. It shows the amount, network, paying address, and
+recipient, then requires explicit confirmation before signing. Read the full
+<a href="https://three.ws/docs/x402-vscode">x402 for VS Code guide</a>.</p>
+<h2 id="features"><a class="anchor" href="#features" aria-label="Link to this section">#</a>Features</h2>
+<ul>
+<li><strong>Bazaar sidebar</strong> — live list of paid x402 HTTP APIs and MCP tools, merged
+across every facilitator via the three.ws discovery proxy
+(<code>/api/bazaar/list</code>, <code>/api/bazaar/search</code>). Filter by type, price, and tag;
+full-text search.</li>
+<li><strong>Inspect an endpoint</strong> — paste any URL and decode its 402 challenge: every
+accepted network, asset, scheme, price (in USD), and <code>payTo</code>, with the rail
+each accept settles on (<code>[solana]</code> / <code>[evm]</code>) and the one this wallet can
+satisfy flagged.</li>
+<li><strong>Pay &amp; call</strong> — make a real paid request and settle it on the right rail
+automatically: <strong>USDC or $THREE on Solana</strong> via the real <code>@x402/svm</code> <code>exact</code>
+scheme, or <strong>USDC on Base</strong> and other EVM chains via
+<a href="https://github.com/nirholas/vscode-x402/blob/main/./x402-fetch"><code>@three-ws/x402-fetch</code></a>. The exact USD amount, token, and
+network are shown and confirmed before signing; a spending cap blocks anything
+above your limit. The response body and on-chain settlement receipt (tx hash)
+render inline.</li>
+<li><strong>Two secure wallets</strong> — an EVM key and a Solana key, each stored only in VS
+Code SecretStorage (the OS keychain). Never in settings, never on disk in
+plaintext. The status bar shows both derived addresses.</li>
+<li><strong>Scaffold a paid endpoint</strong> — generate a working <code>api/x402/&lt;slug&gt;.js</code> that
+follows the repo&#39;s canonical <code>paidEndpoint()</code> pattern, wired end-to-end from
+the first deploy.</li>
+</ul>
+<h2 id="setup"><a class="anchor" href="#setup" aria-label="Link to this section">#</a>Setup</h2>
+<ol>
+<li>Install the extension and open the <strong>x402 Bazaar</strong> view in the activity bar.</li>
+<li>Set a wallet key for the rail you want to pay on:<ul>
+<li><strong>x402: Set Solana Wallet Key</strong> — a base58 secret key (or JSON byte array)
+for a funded Solana wallet holding USDC and/or $THREE.</li>
+<li><strong>x402: Set EVM Wallet Key</strong> — a <code>0x</code> + 64 hex key for a funded Base USDC
+wallet.
+Either or both; keys are stored in your OS keychain.</li>
+</ul>
+</li>
+<li>Browse or search the bazaar, open a service, and <strong>Pay &amp; call</strong>.</li>
+</ol>
+<h2 id="settings"><a class="anchor" href="#settings" aria-label="Link to this section">#</a>Settings</h2>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>threewsX402.origin</code></td>
+<td><code>https://three.ws</code></td>
+<td>Host of the bazaar discovery API.</td>
+</tr>
+<tr>
+<td><code>threewsX402.maxPaymentUsd</code></td>
+<td><code>0.10</code></td>
+<td>Per-request spending cap, in USD.</td>
+</tr>
+<tr>
+<td><code>threewsX402.confirmEachPayment</code></td>
+<td><code>true</code></td>
+<td>Confirm the exact amount before signing.</td>
+</tr>
+<tr>
+<td><code>threewsX402.network</code></td>
+<td><code>&quot;&quot;</code> (auto)</td>
+<td>Preferred CAIP-2 network when a service accepts several (<code>solana:…</code> or <code>eip155:…</code>). Auto prefers USDC on Solana, then Base.</td>
+</tr>
+<tr>
+<td><code>threewsX402.preferToken</code></td>
+<td><code>auto</code></td>
+<td>Token to pay when several are offered: <code>auto</code> (USDC first, then $THREE), <code>usdc</code>, or <code>three</code>.</td>
+</tr>
+<tr>
+<td><code>threewsX402.filters</code></td>
+<td><code>{ &quot;type&quot;: &quot;http&quot; }</code></td>
+<td>Default bazaar filters.</td>
+</tr>
+</tbody></table>
+<p>The USD spending cap applies to USDC payments. A non-stable token such as
+<code>$THREE</code> is always shown in token units and always requires explicit
+confirmation because the 402 challenge does not provide a fiat conversion.</p>
+<h2 id="how-payment-works"><a class="anchor" href="#how-payment-works" aria-label="Link to this section">#</a>How payment works</h2>
+<p>The extension reads the 402 challenge and picks a payable requirement across both
+rails, honouring <code>network</code> and <code>preferToken</code>.</p>
+<ul>
+<li><strong>Solana</strong> (<code>solana:*</code>): the real <code>@x402/svm</code> <code>exact</code> scheme signs an SPL
+transfer of the selected token (USDC or <strong>$THREE</strong>, mint
+<code>FeMbDoX7R1Psc4GEcvJdsbNbZA3bfztcyDCatJVJpump</code>) from your key and retries with
+the <code>X-PAYMENT</code> proof. This is the same buyer <code>@three-ws/x402-mcp</code> uses.</li>
+<li><strong>EVM</strong> (<code>eip155:*</code>): <a href="https://github.com/nirholas/vscode-x402/blob/main/./x402-fetch"><code>@three-ws/x402-fetch</code></a> signs a USDC
+<strong>EIP-3009</strong> <code>transferWithAuthorization</code> on Base (or another EVM chain) and
+retries with the proof.</li>
+</ul>
+<p>Either way the merchant settles on-chain and returns the work plus a settlement
+receipt, rendered inline with the token, network, and transaction hash. A
+service that only accepts a rail you have no key for is flagged, and the
+extension offers to set the matching wallet.</p>
+<h2 id="development"><a class="anchor" href="#development" aria-label="Link to this section">#</a>Development</h2>
+<pre><code class="language-bash">npm install
+npm run build        # bundle to dist/extension.cjs
+npm run watch        # rebuild on change
+npm test             # requirement selection, token rules, scaffold template
+</code></pre>
+<p>Press <kbd>F5</kbd> in VS Code to launch an Extension Development Host.</p>
+<p>Apache-2.0 (see <a href="https://github.com/nirholas/vscode-x402/blob/main/LICENSE">LICENSE</a>) · part of the
+<a href="https://three.ws">three.ws</a> monorepo.</p>
+</main>
+<nav class="toc" aria-label="On this page"><p>On this page</p><ul><li><a href="#pay-with-three-on-solana">Pay with $THREE on Solana</a></li><li><a href="#features">Features</a></li><li><a href="#setup">Setup</a></li><li><a href="#settings">Settings</a></li><li><a href="#how-payment-works">How payment works</a></li><li><a href="#development">Development</a></li></ul></nav>
+</div>
+<footer><div class="foot-in"><span>Apache-2.0 licensed</span><a href="https://github.com/nirholas/vscode-x402/issues">Issues</a><a href="https://github.com/nirholas/vscode-x402/blob/main/CONTRIBUTING.md">Contributing</a><a href="https://github.com/nirholas/vscode-x402/security/policy">Security</a><a href="https://three.ws">Part of three.ws</a></div></footer>
+<script>document.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+var t=b.getAttribute('data-copy');var done=function(){var o=b.textContent;b.textContent='Copied';setTimeout(function(){b.textContent=o},1400)};
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
+else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()}})});</script>
+</body>
+</html>

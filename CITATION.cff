@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: If you use this software, please cite it as below.
+title: "@three-ws/vscode-x402"
+abstract: "Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws."
+version: 0.2.2
+license: Apache-2.0
+repository-code: "https://github.com/nirholas/vscode-x402"
+url: "https://three.ws"
+authors:
+  - name: three.ws
+    website: "https://three.ws"

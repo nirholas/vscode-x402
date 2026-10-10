@@ -1,0 +1,201 @@
+{
+	"name": "@three-ws/vscode-x402",
+	"displayName": "three.ws — x402",
+	"description": "Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.",
+	"version": "0.2.2",
+	"publisher": "three-ws",
+	"license": "Apache-2.0",
+	"homepage": "https://nirholas.github.io/vscode-x402/",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/nirholas/vscode-x402.git"
+	},
+	"bugs": {
+		"url": "https://github.com/nirholas/vscode-x402/issues"
+	},
+	"engines": {
+		"vscode": "^1.85.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"keywords": [
+		"x402",
+		"payments",
+		"usdc",
+		"three",
+		"solana",
+		"base",
+		"micropayments",
+		"agent",
+		"mcp",
+		"bazaar",
+		"web3",
+		"ai-agents",
+		"three.ws"
+	],
+	"type": "module",
+	"main": "./dist/extension.cjs",
+	"icon": "media/icon.png",
+	"activationEvents": [],
+	"contributes": {
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "threewsX402",
+					"title": "x402 Bazaar",
+					"icon": "media/x402.svg"
+				}
+			]
+		},
+		"views": {
+			"threewsX402": [
+				{
+					"id": "threewsX402.bazaar",
+					"name": "Services",
+					"icon": "media/x402.svg"
+				}
+			]
+		},
+		"viewsWelcome": [
+			{
+				"view": "threewsX402.bazaar",
+				"contents": "Browse paid x402 APIs and MCP tools from across the bazaar.\n[Refresh services](command:threewsX402.refresh)\n[Set filters](command:threewsX402.setFilters)\n\nTo pay you'll need a wallet key. Solana pays USDC or $THREE; EVM pays USDC on Base.\n[Set Solana wallet key](command:threewsX402.setSolanaWalletKey)\n[Set EVM wallet key](command:threewsX402.setWalletKey)"
+			}
+		],
+		"commands": [
+			{
+				"command": "threewsX402.refresh",
+				"title": "x402: Refresh Bazaar",
+				"icon": "$(refresh)"
+			},
+			{
+				"command": "threewsX402.search",
+				"title": "x402: Search Bazaar",
+				"icon": "$(search)"
+			},
+			{
+				"command": "threewsX402.setFilters",
+				"title": "x402: Set Bazaar Filters",
+				"icon": "$(filter)"
+			},
+			{
+				"command": "threewsX402.inspect",
+				"title": "x402: Inspect Endpoint (decode 402 challenge)"
+			},
+			{
+				"command": "threewsX402.openService",
+				"title": "x402: Open Service Details"
+			},
+			{
+				"command": "threewsX402.pay",
+				"title": "x402: Pay & Call Endpoint"
+			},
+			{
+				"command": "threewsX402.setWalletKey",
+				"title": "x402: Set Wallet Key"
+			},
+			{
+				"command": "threewsX402.clearWalletKey",
+				"title": "x402: Clear EVM Wallet Key"
+			},
+			{
+				"command": "threewsX402.setSolanaWalletKey",
+				"title": "x402: Set Solana Wallet Key"
+			},
+			{
+				"command": "threewsX402.clearSolanaWalletKey",
+				"title": "x402: Clear Solana Wallet Key"
+			},
+			{
+				"command": "threewsX402.scaffoldEndpoint",
+				"title": "x402: Scaffold a Paid Endpoint"
+			}
+		],
+		"menus": {
+			"view/title": [
+				{
+					"command": "threewsX402.search",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@1"
+				},
+				{
+					"command": "threewsX402.setFilters",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@2"
+				},
+				{
+					"command": "threewsX402.refresh",
+					"when": "view == threewsX402.bazaar",
+					"group": "navigation@3"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "threewsX402.pay",
+					"when": "view == threewsX402.bazaar && viewItem == x402service",
+					"group": "inline"
+				}
+			]
+		},
+		"configuration": {
+			"title": "three.ws x402",
+			"properties": {
+				"threewsX402.origin": {
+					"type": "string",
+					"default": "https://three.ws",
+					"description": "Origin that hosts the bazaar discovery API (/api/bazaar/list, /api/bazaar/search)."
+				},
+				"threewsX402.maxPaymentUsd": {
+					"type": "number",
+					"default": 0.1,
+					"description": "Spending cap per request, in USD. Any auto-payment above this is refused before signing."
+				},
+				"threewsX402.confirmEachPayment": {
+					"type": "boolean",
+					"default": true,
+					"description": "Show a confirmation dialog with the exact USD amount before signing each payment."
+				},
+				"threewsX402.network": {
+					"type": "string",
+					"default": "",
+					"description": "Preferred CAIP-2 network when an endpoint accepts several (e.g. solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp or eip155:8453). Leave empty for auto (prefers USDC on Solana, then Base)."
+				},
+				"threewsX402.preferToken": {
+					"type": "string",
+					"enum": [
+						"auto",
+						"usdc",
+						"three"
+					],
+					"default": "auto",
+					"description": "Which token to pay when a service accepts several. 'auto' prefers USDC (Solana, then Base) and falls back to $THREE; 'three' pays $THREE on Solana when offered; 'usdc' forces USDC."
+				},
+				"threewsX402.filters": {
+					"type": "object",
+					"default": {
+						"type": "http"
+					},
+					"description": "Default bazaar filters (type, network, maxPrice, tag, sort)."
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "node build.mjs",
+		"test": "node --test \"test/*.test.mjs\"",
+		"watch": "node build.mjs --watch",
+		"vscode:prepublish": "node build.mjs --production"
+	},
+	"dependencies": {
+		"@solana/kit": "5.5.1",
+		"@x402/core": "2.14.0",
+		"@x402/fetch": "2.14.0",
+		"@x402/svm": "2.14.0",
+		"bs58": "^6.0.0"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.85.0",
+		"esbuild": "^0.28.2"
+	}
+}

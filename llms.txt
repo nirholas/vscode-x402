@@ -1,0 +1,19 @@
+# @three-ws/vscode-x402
+
+> Browse the x402 bazaar, decode 402 payment challenges, and pay per call for paid APIs and MCP tools in USDC or $THREE on Solana and Base, without leaving VS Code. Powered by three.ws.
+
+@three-ws/vscode-x402 is a JavaScript library from three.ws. Install: `npm install @three-ws/vscode-x402`.
+
+## Docs
+
+- [README](https://github.com/nirholas/vscode-x402/blob/main/README.md): install, configuration, full reference
+- [Documentation site](https://nirholas.github.io/vscode-x402/): the README as a web page
+- [Full text for LLMs](https://nirholas.github.io/vscode-x402/llms-full.txt): README inlined
+- [AGENTS.md](https://github.com/nirholas/vscode-x402/blob/main/AGENTS.md): guidance for coding agents
+
+## Project
+
+- [Source](https://github.com/nirholas/vscode-x402)
+- [npm](https://www.npmjs.com/package/@three-ws/vscode-x402)
+- [three.ws](https://three.ws): the platform this is part of
+- [Issues](https://github.com/nirholas/vscode-x402/issues)
